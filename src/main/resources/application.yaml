@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    username: record_label
+    password: record_label
+    url: jdbc:mysql://localhost:3306/record_label
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+ 
