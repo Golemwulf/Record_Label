@@ -1,18 +1,149 @@
 package record.label.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
+import record.label.controller.model.BandsData;
+import record.label.controller.model.BandsData.MusiciansData;
+import record.label.controller.model.BandsData.MusiciansData.AlbumsData;
+import record.label.controller.model.BandsData.MusiciansData.SongsData;
 import record.label.service.RecordLabelService;
 
 @RestController
 @RequestMapping("/record_label")
 @Slf4j
 public class RecordLabelController {
+	@Autowired
+	private RecordLabelService recordLabelService;
 
-	public RecordLabelController (RecordLabelService service) {
-		
+	/** Focused on the bands table **/
+
+	@PostMapping("/band")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public BandsData insertBands(@RequestBody BandsData bandsData) {
+		log.info("Creating band  {}", bandsData);
+		return recordLabelService.saveBands(bandsData);
+	}
+
+	@PutMapping("/band/{bandId}")
+	public BandsData updateBands(@PathVariable Long bandId, @RequestBody BandsData bandsData) {
+		bandsData.setBandId(bandId);
+		log.info("Updating band  with ID={}", bandsData);
+		return recordLabelService.saveBands(bandsData);
+	}
+
+	@PostMapping("/band/{bandId}/mucisian")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public MusiciansData addMucisianToBands(@PathVariable Long bandId, @RequestBody MusiciansData musiciansData) {
+		log.info("Adding mucisian {) to band  with ID= {}", musiciansData, bandId);
+
+		return recordLabelService.saveMusician(musiciansData);
+	}
+
+	@GetMapping("/band")
+	public List<BandsData> retrieveAllBands() {
+		log.info("Retrieveing all bands");
+		return recordLabelService.retrieveAllBands();
+	}
+
+	@GetMapping("/band/{bandId}")
+	public BandsData retrieveBandsById(@PathVariable Long bandId) {
+		log.info("Retrieving band  with ID= {}", bandId);
+		return recordLabelService.retrieveBandById(bandId);
+	}
+
+	@DeleteMapping("/band/{bandId}")
+	public Map<String, String> deleteBandsById(@PathVariable Long bandId) {
+		log.info("Deleting band  with ID= {}", bandId);
+
+		recordLabelService.deleteBandById(bandId);
+
+		return Map.of("message", "Band  with ID=" + bandId + " deleted.");
+
+	}
+
+	/* Focuses on the musicians table. */
+
+	@GetMapping("/musicians")
+	public List<MusiciansData> retrieveAllMusicians() {
+		log.info("Retrieveing all bands");
+		return recordLabelService.retrieveAllMusicians();
+
+	}
+
+	@GetMapping("/musicians/{musicianId}")
+	public MusiciansData retrieveMusicianById(@PathVariable Long musicianId) {
+		log.info("Retrieving pet store with ID= {}", musicianId);
+		return recordLabelService.retrieveMusicianById(musicianId);
+	}
+
+	@PutMapping("/musicians/{musicianId}")
+	public MusiciansData musicians(@PathVariable Long musicianId, @RequestBody MusiciansData musiciansData) {
+		musiciansData.setMusicianId(musicianId);
+		log.info("Updating band  with ID={}", musiciansData);
+		return recordLabelService.saveMusicians(musiciansData);
+	}
+
+	@DeleteMapping("/musicians/{musicianId}")
+	public Map<String, String> deleteMusiciansById(@PathVariable Long musicianId) {
+		log.info("Deleting musician  with ID= {}", musicianId);
+
+		recordLabelService.deleteMusiciansById(musicianId);
+
+		return Map.of("message", "musician  with ID=" + musicianId + " deleted.");
+	}
+
+//
+
+	/* Focuses on the album table.  */
+	@GetMapping("/albums")
+	public List<AlbumsData> retrieveAllAlbums() {
+		log.info("Retrieveing all albums");
+		return recordLabelService.retrieveAllAlbums();
+	}
+
+	@GetMapping("/albums/{albumId}")
+	public AlbumsData retrieveAlbumById(@PathVariable Long albumId) {
+		log.info("Retrieving album with ID= {}", albumId);
+		return recordLabelService.retrieveAlbumById(albumId);
+	}
+	
+	@PutMapping("albums/{albumId}")
+	public AlbumsData updateAlbum(@PathVariable Long albumId, @RequestBody AlbumsData albumsData) {
+		albumsData.setAlbumId(albumId);
+		log.info("Updating band  with ID={}", albumsData);
+		return recordLabelService.saveAlbums(albumsData);
+	}
+
+	/* Focuses on the songs table. */
+
+	@GetMapping("/songs")
+	public List<SongsData> retrieveAllSongs() {
+		log.info("Retrieveing all Songs");
+		return recordLabelService.retrieveAllSongs();
+	}
+	@GetMapping("/songs/{songId}")
+	public SongsData retrieveSongById(@PathVariable Long songId) {
+		log.info("Retrieving song with ID= {}", songId);
+		return recordLabelService.retrieveSongById(songId);
+	}
+	@PutMapping("songs/{songId}")
+	public SongsData updateSongs(@PathVariable Long songId, @RequestBody SongsData songsData) {
+		songsData.setSongId(songId);
+		log.info("Updating Song  with ID={}", songsData);
+		return recordLabelService.saveSong(songsData);
 	}
 }
- 

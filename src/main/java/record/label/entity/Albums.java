@@ -3,12 +3,12 @@ package record.label.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.CascadeType;
-import org.springframework.data.annotation.Id;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -29,11 +29,11 @@ public class Albums {
 
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "albums", cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	//@formatter:off
 	@JoinTable(name = "album_songs",
 			joinColumns = @JoinColumn(name = "album_id"),
 			inverseJoinColumns = @JoinColumn(name = "song_id"))
 	//@formatter:on
-	private Set<Songs> song = new HashSet<>();
+	private Set<Songs> songs = new HashSet<>();
 }

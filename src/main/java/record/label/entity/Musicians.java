@@ -1,15 +1,13 @@
 package record.label.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.springframework.data.annotation.Id;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -27,8 +25,9 @@ public class Musicians {
 	private String instrument;
 	
 	
-	@OneToMany(mappedBy = "musicians", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "band_id")
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	private Set<Bands> bands= new HashSet<>();
+	private Bands band;
 }
