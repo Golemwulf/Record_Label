@@ -44,13 +44,15 @@ public class RecordLabelController {
 		log.info("Updating band  with ID={}", bandsData);
 		return recordLabelService.saveBands(bandsData);
 	}
-
-	@PostMapping("/band/{bandId}/mucisian")
+	/*
+	 * post new musician
+	 */
+	@PostMapping("/band/{bandId}/musician")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public MusiciansData addMucisianToBands(@PathVariable Long bandId, @RequestBody MusiciansData musiciansData) {
-		log.info("Adding mucisian {) to band  with ID= {}", musiciansData, bandId);
+	public MusiciansData addmusicianToBands(@PathVariable Long bandId, @RequestBody MusiciansData musiciansData) {
+		log.info("Adding musician {) to band  with ID= {}", musiciansData, bandId);
 
-		return recordLabelService.saveMusician(musiciansData);
+		return recordLabelService.saveMusician(bandId, musiciansData);
 	}
 
 	@GetMapping("/band")
@@ -77,6 +79,8 @@ public class RecordLabelController {
 
 	/* Focuses on the musicians table. */
 
+
+
 	@GetMapping("/musicians")
 	public List<MusiciansData> retrieveAllMusicians() {
 		log.info("Retrieveing all bands");
@@ -90,11 +94,12 @@ public class RecordLabelController {
 		return recordLabelService.retrieveMusicianById(musicianId);
 	}
 
-	@PutMapping("/musicians/{musicianId}")
-	public MusiciansData musicians(@PathVariable Long musicianId, @RequestBody MusiciansData musiciansData) {
+	@PutMapping("/band/{bandId}/musicians/{musicianId}")
+	public MusiciansData musicians(@PathVariable Long bandId, @PathVariable Long musicianId,
+			@RequestBody MusiciansData musiciansData) {
 		musiciansData.setMusicianId(musicianId);
-		log.info("Updating band  with ID={}", musiciansData);
-		return recordLabelService.saveMusicians(musiciansData);
+		log.info("Updating Musiciain with ID={}", musiciansData);
+		return recordLabelService.saveMusician(bandId, musiciansData);
 	}
 
 	@DeleteMapping("/musicians/{musicianId}")
@@ -108,7 +113,15 @@ public class RecordLabelController {
 
 //
 
-	/* Focuses on the album table.  */
+	/* Focuses on the album table. */
+	
+	@PostMapping("/albums")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public AlbumsData insertAlbums(@RequestBody AlbumsData albumsData) {
+		log.info("Creating Album  {}", albumsData);
+		return recordLabelService.saveAlbums(albumsData);
+	}
+	
 	@GetMapping("/albums")
 	public List<AlbumsData> retrieveAllAlbums() {
 		log.info("Retrieveing all albums");
@@ -120,7 +133,7 @@ public class RecordLabelController {
 		log.info("Retrieving album with ID= {}", albumId);
 		return recordLabelService.retrieveAlbumById(albumId);
 	}
-	
+
 	@PutMapping("albums/{albumId}")
 	public AlbumsData updateAlbum(@PathVariable Long albumId, @RequestBody AlbumsData albumsData) {
 		albumsData.setAlbumId(albumId);
@@ -129,18 +142,27 @@ public class RecordLabelController {
 	}
 
 	/* Focuses on the songs table. */
+	
+	@PostMapping("/band/{bandId}/songs/")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public SongsData insertSongs(@RequestBody SongsData songsData) {
+		log.info("Creating Song with ID= {}", songsData);
+		return recordLabelService.saveSong(songsData);
+	}
 
 	@GetMapping("/songs")
 	public List<SongsData> retrieveAllSongs() {
 		log.info("Retrieveing all Songs");
 		return recordLabelService.retrieveAllSongs();
 	}
-	@GetMapping("/songs/{songId}")
+
+	@GetMapping("/band/{bandId}/songs/{songId}")
 	public SongsData retrieveSongById(@PathVariable Long songId) {
 		log.info("Retrieving song with ID= {}", songId);
 		return recordLabelService.retrieveSongById(songId);
 	}
-	@PutMapping("songs/{songId}")
+
+	@PutMapping("/band/{bandId}/songs/{songId}")
 	public SongsData updateSongs(@PathVariable Long songId, @RequestBody SongsData songsData) {
 		songsData.setSongId(songId);
 		log.info("Updating Song  with ID={}", songsData);

@@ -30,6 +30,7 @@ public class BandsData {
 	public BandsData(Bands band) {
 		this.bandId = band.getBandId();
 		this.bandName = band.getBandName();
+		this.genre = band.getGenre();
 		this.homeTown = band.getHomeTown();
 		this.yearsActive = band.getYearsActive();
 
@@ -46,6 +47,7 @@ public class BandsData {
 		Bands band = new Bands();
 		band.setBandId(bandId);
 		band.setBandName(bandName);
+		band.setGenre(genre);
 		band.setHomeTown(homeTown);
 		band.setYearsActive(yearsActive);
 

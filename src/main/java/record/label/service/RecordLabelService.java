@@ -56,7 +56,8 @@ public class RecordLabelService {
 
 	private void copyBandsFields(Bands band, BandsData bandData) {
 		band.setBandId(bandData.getBandId());
-		band.setBandName(band.getBandName());
+		band.setBandName(bandData.getBandName());
+		band.setHomeTown(bandData.getHomeTown());
 		band.setGenre(bandData.getGenre());
 		band.setYearsActive(bandData.getYearsActive());
 	}
@@ -94,22 +95,31 @@ public class RecordLabelService {
 		return new BandsData(findBandById(bandId));
 	}
 
-
-
 	/* musicians Table */
 
-	private Musicians findMusiciansById(Long musiciansId) {
-		return musiciansDao.findById(musiciansId)
-				.orElseThrow(() -> new NoSuchElementException("Band  with ID= " + musiciansId + " was not found"));
+	private Musicians findMusiciansById(Long bandId, Long musiciansId) {
+		Musicians musicians = musiciansDao.findById(musiciansId)
+				.orElseThrow(() -> new NoSuchElementException("Musicians with ID=" + musiciansId + " Was not found."));
+
+		if (musicians.getBand().getBandId() != bandId) {
+			throw new IllegalArgumentException(
+					"The musicians with ID=" + musiciansId + " is not a member of the band with ID=" + bandId);
+		}
+
+		return musicians;
 	}
+
 	@Transactional(readOnly = false)
-	public MusiciansData saveMusician(MusiciansData musiciansData) {
-		Long musiciansId = musiciansData.getMusicianId();
-		Musicians musicians = findOrCreateMusician(musiciansId);
+	public MusiciansData saveMusician(Long bandId, MusiciansData musiciansData) {
+		Bands band = findOrCreateBands(bandId);
+		Musicians musician = findOrCreateMusician(bandId, musiciansData.getMusicianId());
+		copyMusiciansFields(musician, musiciansData);
 
-		copyMusiciansFields(musicians, musiciansData);
-		return new MusiciansData(musiciansDao.save(musicians));
+		musician.setBand(band);
+		band.getMusicians().add(musician);
 
+		Musicians dbMusician = musiciansDao.save(musician);
+		return new MusiciansData(dbMusician);
 	}
 
 	private void copyMusiciansFields(Musicians musicians, MusiciansData musiciansData) {
@@ -118,9 +128,13 @@ public class RecordLabelService {
 		musicians.setInstrument(musiciansData.getInstrument());
 	}
 
-	private Musicians findOrCreateMusician(Long musiciansId) {
-		return musiciansDao.findById(musiciansId)
-				.orElseThrow(() -> new NoSuchElementException("Musician with ID= " + musiciansId + " was not found"));
+	private Musicians findOrCreateMusician(Long musiciansId, Long bandId) {
+		if (Objects.isNull(musiciansId)) {
+			return new Musicians();
+		}
+
+		return findMusiciansById(bandId, musiciansId);
+
 	}
 
 	@Transactional(readOnly = true)
@@ -131,25 +145,21 @@ public class RecordLabelService {
 		for (Musicians musician : musicians) {
 			MusiciansData md = new MusiciansData(musician);
 
-
 			result.add(md);
 		}
 
 		return result;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public MusiciansData retrieveMusicianById(Long musicianId) {
 		return new MusiciansData(findMusiciansById(musicianId));
 
-}
-	@Transactional(readOnly = false)
-	public MusiciansData saveMusicians(MusiciansData musiciansData) {
-		Long musicianId = musiciansData.getMusicianId();
-		Musicians musician = findOrCreateMusician(musicianId);
+	}
 
-		copyMusiciansFields(musician, musiciansData);
-		return new MusiciansData(musiciansDao.save(musician));
+	private Musicians findMusiciansById(Long musicianId) {
+		return musiciansDao.findById(musicianId)
+				.orElseThrow(() -> new NoSuchElementException("Musicians with ID=" + musicianId + " Was not found."));
 	}
 
 	@Transactional(readOnly = false)
@@ -157,22 +167,21 @@ public class RecordLabelService {
 		Musicians musician = findMusiciansById(musicianId);
 		musiciansDao.delete(musician);
 	}
-	
-	
+
 	/* album Table */
 
 	private Albums findAlbumById(Long albumId) {
 		return albumsDao.findById(albumId)
 				.orElseThrow(() -> new NoSuchElementException("Band  with ID= " + albumId + " was not found"));
 	}
+
 	public List<AlbumsData> retrieveAllAlbums() {
-		
+
 		List<Albums> albums = albumsDao.findAll();
 		List<AlbumsData> result = new LinkedList<>();
 
 		for (Albums album : albums) {
 			AlbumsData ad = new AlbumsData(album);
-
 
 			result.add(ad);
 		}
@@ -206,21 +215,19 @@ public class RecordLabelService {
 		album.setYearReleased(album.getYearReleased());
 	}
 
-	
-	/*song Table*/
-	
+	/* song Table */
+
 	private Songs findSongById(Long songId) {
 		return songsDao.findById(songId)
 				.orElseThrow(() -> new NoSuchElementException("Song  with ID= " + songId + " was not found"));
 	}
-	
+
 	public List<SongsData> retrieveAllSongs() {
 		List<Songs> songs = songsDao.findAll();
 		List<SongsData> result = new LinkedList<>();
 
 		for (Songs song : songs) {
 			SongsData sd = new SongsData(song);
-
 
 			result.add(sd);
 		}
@@ -238,7 +245,7 @@ public class RecordLabelService {
 
 		copySongsFields(song, songsData);
 		return new SongsData(songsDao.save(song));
-	
+
 	}
 
 	private Songs findOrCreateSong(Long songId) {
@@ -253,8 +260,4 @@ public class RecordLabelService {
 		song.setSongId(song.getSongId());
 		song.setSongTitle(song.getSongTitle());
 	}
-	}
-	
-
-
-
+}
