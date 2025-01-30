@@ -18,6 +18,7 @@ import record.label.entity.Songs;
 public class BandsData {
 
 	private Long bandId;
+	private String bandName;
 	private String genre;
 	private String homeTown;
 	private String yearsActive;
@@ -28,6 +29,7 @@ public class BandsData {
 
 	public BandsData(Bands band) {
 		this.bandId = band.getBandId();
+		this.bandName = band.getBandName();
 		this.homeTown = band.getHomeTown();
 		this.yearsActive = band.getYearsActive();
 
@@ -43,6 +45,7 @@ public class BandsData {
 	public Bands toBands() {
 		Bands band = new Bands();
 		band.setBandId(bandId);
+		band.setBandName(bandName);
 		band.setHomeTown(homeTown);
 		band.setYearsActive(yearsActive);
 
