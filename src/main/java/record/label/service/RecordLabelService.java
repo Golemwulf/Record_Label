@@ -36,7 +36,7 @@ public class RecordLabelService {
 
 	/* bands Table */
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false)
 	public BandsData saveBands(BandsData bandData) {
 		Long bandId = bandData.getBandId();
 		Bands band = findOrCreateBands(bandId);
@@ -56,6 +56,7 @@ public class RecordLabelService {
 
 	private void copyBandsFields(Bands band, BandsData bandData) {
 		band.setBandId(bandData.getBandId());
+		band.setBandName(band.getBandName());
 		band.setGenre(bandData.getGenre());
 		band.setYearsActive(bandData.getYearsActive());
 	}

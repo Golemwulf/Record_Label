@@ -22,6 +22,7 @@ public class Bands {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bandId;
 	
+	private String bandName;
 	private String genre;
 	private String homeTown;
 	private String yearsActive;
