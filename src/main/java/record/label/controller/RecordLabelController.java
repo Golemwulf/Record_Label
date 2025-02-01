@@ -91,7 +91,7 @@ public class RecordLabelController {
 		return recordLabelService.saveMusician(bandId, musiciansData);
 	}
 
-	@DeleteMapping("/musicians/{musicianId}")
+	@DeleteMapping("musicians/{musicianId}")
 	public Map<String, String> deleteMusiciansById(@PathVariable Long musicianId) {
 		log.info("Deleting musician  with ID= {}", musicianId);
 
