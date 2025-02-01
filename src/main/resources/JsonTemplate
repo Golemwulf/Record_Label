@@ -1,0 +1,34 @@
+Bands___________
+
+{
+  "bandName": "",
+  "genre": "",
+  "homeTown": "",
+  "yearsActive": "",
+}
+
+
+Musicians________
+
+
+    
+     {
+      "firstName": "",
+      "lastName": "",
+      "instrument": ""
+    }
+    
+  
+Albums___________________
+  
+  {
+      "albumTitle": "",
+      "yearReleased": ""
+    }
+    
+	
+Songs_____________________
+
+  {     
+      "songTitle": ""
+    }

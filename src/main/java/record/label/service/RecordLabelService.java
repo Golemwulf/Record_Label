@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import record.label.controller.model.BandsData;
+import record.label.controller.model.BandsData.AlbumsData;
 import record.label.controller.model.BandsData.MusiciansData;
-import record.label.controller.model.BandsData.MusiciansData.AlbumsData;
-import record.label.controller.model.BandsData.MusiciansData.SongsData;
+import record.label.controller.model.BandsData.SongsData;
 import record.label.dao.AlbumsDao;
 import record.label.dao.BandsDao;
 import record.label.dao.MusiciansDao;
@@ -111,7 +111,7 @@ public class RecordLabelService {
 
 	@Transactional(readOnly = false)
 	public MusiciansData saveMusician(Long bandId, MusiciansData musiciansData) {
-		Bands band = findOrCreateBands(bandId);
+		Bands band = findBandById(bandId);
 		Musicians musician = findOrCreateMusician(bandId, musiciansData.getMusicianId());
 		copyMusiciansFields(musician, musiciansData);
 
@@ -128,7 +128,7 @@ public class RecordLabelService {
 		musicians.setInstrument(musiciansData.getInstrument());
 	}
 
-	private Musicians findOrCreateMusician(Long musiciansId, Long bandId) {
+	private Musicians findOrCreateMusician(Long bandId, Long musiciansId) {
 		if (Objects.isNull(musiciansId)) {
 			return new Musicians();
 		}
@@ -178,10 +178,13 @@ public class RecordLabelService {
 	public List<AlbumsData> retrieveAllAlbums() {
 
 		List<Albums> albums = albumsDao.findAll();
+
 		List<AlbumsData> result = new LinkedList<>();
 
 		for (Albums album : albums) {
 			AlbumsData ad = new AlbumsData(album);
+
+			ad.getSongs().clear();
 
 			result.add(ad);
 		}
@@ -194,10 +197,11 @@ public class RecordLabelService {
 	}
 
 	public AlbumsData saveAlbums(AlbumsData albumsData) {
-		Long albumId = albumsData.getAlbumId();
-		Albums album = findOrCreateAlbum(albumId);
-
+		Albums album = findOrCreateAlbum(albumsData.getAlbumId());
 		copyAlbumsFields(album, albumsData);
+
+		album.getSongs();
+
 		return new AlbumsData(albumsDao.save(album));
 	}
 
@@ -210,9 +214,9 @@ public class RecordLabelService {
 	}
 
 	private void copyAlbumsFields(Albums album, AlbumsData albumsData) {
-		album.setAlbumId(album.getAlbumId());
-		album.setAlbumTitle(album.getAlbumTitle());
-		album.setYearReleased(album.getYearReleased());
+		album.setAlbumId(albumsData.getAlbumId());
+		album.setAlbumTitle(albumsData.getAlbumTitle());
+		album.setYearReleased(albumsData.getYearReleased());
 	}
 
 	/* song Table */
@@ -239,16 +243,22 @@ public class RecordLabelService {
 		return new SongsData(findSongById(songId));
 	}
 
-	public SongsData saveSong(SongsData songsData) {
+	public SongsData saveSong(Long bandId, SongsData songsData) {
+
+		Bands band = findBandById(bandId);
 		Long songId = songsData.getSongId();
-		Songs song = findOrCreateSong(songId);
+		Songs song = findOrCreateSong(bandId, songId);
 
 		copySongsFields(song, songsData);
+
+		song.setBands(band);
+		band.getSongs().add(song);
+
 		return new SongsData(songsDao.save(song));
 
 	}
 
-	private Songs findOrCreateSong(Long songId) {
+	private Songs findOrCreateSong(Long bandId, Long songId) {
 		if (Objects.isNull(songId)) {
 			return new Songs();
 		} else {
@@ -257,7 +267,18 @@ public class RecordLabelService {
 	}
 
 	private void copySongsFields(Songs song, SongsData songsData) {
-		song.setSongId(song.getSongId());
-		song.setSongTitle(song.getSongTitle());
+		song.setSongId(songsData.getSongId());
+		song.setSongTitle(songsData.getSongTitle());
 	}
+
+
+	public void addSongToAlbum(Long songId, Long albumId) {
+		Songs song = findSongById(songId);
+		Albums album = findAlbumById(albumId);
+		song.getAlbums().add(album);
+		album.getSongs().add(song);
+		songsDao.save(song);
+
+	}
+
 }

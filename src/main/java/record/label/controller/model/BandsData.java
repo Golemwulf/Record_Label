@@ -5,7 +5,6 @@ import java.util.Set;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import record.label.controller.model.BandsData.MusiciansData.SongsData;
 import record.label.entity.Albums;
 import record.label.entity.Bands;
 import record.label.entity.Musicians;
@@ -88,62 +87,56 @@ public class BandsData {
 
 			return musicians;
 		}
+	}
 
-		@Data
-		@NoArgsConstructor
-		public static class AlbumsData {
+	@Data
+	@NoArgsConstructor
+	public static class AlbumsData {
 
-			private Long albumId;
-			private String albumTitle;
-			private String yearReleased;
-			private Set<SongsData> songs = new HashSet<>();
+		private Long albumId;
+		private String albumTitle;
+		private String yearReleased;
+		private Set<SongsData> songs = new HashSet<>();
 
-			public AlbumsData(Albums album) {
-				this.albumId = album.getAlbumId();
-				this.albumTitle = album.getAlbumTitle();
-				this.yearReleased = album.getYearReleased();
+		public AlbumsData(Albums album) {
+			this.albumId = album.getAlbumId();
+			this.albumTitle = album.getAlbumTitle();
+			this.yearReleased = album.getYearReleased();
 
-				for (Songs song : album.getSongs()) {
-					this.songs.add(new SongsData(song));
-				}
-			}
-
-			public Albums toAlbums() {
-				Albums albums = new Albums();
-
-				albums.setAlbumId(albumId);
-				albums.setAlbumTitle(albumTitle);
-				albums.setYearReleased(yearReleased);
-
-				for (SongsData songsData : songs) {
-					albums.getSongs().add(songsData.toSongs());
-				}
-				return albums;
-			}
 		}
 
-		@Data
-		@NoArgsConstructor
-		public static class SongsData {
+		public Albums toAlbums() {
+			Albums albums = new Albums();
 
-			private Long songId;
-			private String songTitle;
+			albums.setAlbumId(albumId);
+			albums.setAlbumTitle(albumTitle);
+			albums.setYearReleased(yearReleased);
 
-			public SongsData(Songs song) {
-				this.songId = song.getSongId();
-				this.songTitle = song.getSongTitle();
-
-			}
-
-			public  Songs toSongs() {
-				Songs songs = new Songs();
-				songs.setSongId(songId);
-				songs.setSongTitle(songTitle);
-
-
-				return songs;
-
-			}
+			return albums;
 		}
 	}
+
+	@Data
+	@NoArgsConstructor
+	public static class SongsData {
+
+		private Long songId;
+		private String songTitle;
+
+		public SongsData(Songs song) {
+			this.songId = song.getSongId();
+			this.songTitle = song.getSongTitle();
+
+		}
+
+		public Songs toSongs() {
+			Songs songs = new Songs();
+			songs.setSongId(songId);
+			songs.setSongTitle(songTitle);
+
+			return songs;
+
+		}
+	}
+
 }

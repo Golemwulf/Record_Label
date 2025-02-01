@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 import record.label.controller.model.BandsData;
+import record.label.controller.model.BandsData.AlbumsData;
 import record.label.controller.model.BandsData.MusiciansData;
-import record.label.controller.model.BandsData.MusiciansData.AlbumsData;
-import record.label.controller.model.BandsData.MusiciansData.SongsData;
+import record.label.controller.model.BandsData.SongsData;
 import record.label.service.RecordLabelService;
 
 @RestController
@@ -34,7 +34,7 @@ public class RecordLabelController {
 	@PostMapping("/band")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public BandsData insertBands(@RequestBody BandsData bandsData) {
-		log.info("Creating band  {}", bandsData);
+		log.info("Creating band ID = {}", bandsData);
 		return recordLabelService.saveBands(bandsData);
 	}
 
@@ -43,16 +43,6 @@ public class RecordLabelController {
 		bandsData.setBandId(bandId);
 		log.info("Updating band  with ID={}", bandsData);
 		return recordLabelService.saveBands(bandsData);
-	}
-	/*
-	 * post new musician
-	 */
-	@PostMapping("/band/{bandId}/musician")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public MusiciansData addmusicianToBands(@PathVariable Long bandId, @RequestBody MusiciansData musiciansData) {
-		log.info("Adding musician {) to band  with ID= {}", musiciansData, bandId);
-
-		return recordLabelService.saveMusician(bandId, musiciansData);
 	}
 
 	@GetMapping("/band")
@@ -79,13 +69,12 @@ public class RecordLabelController {
 
 	/* Focuses on the musicians table. */
 
+	@PostMapping("/band/{bandId}/musicians")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public MusiciansData addmusicianToBands(@PathVariable Long bandId, @RequestBody MusiciansData musiciansData) {
+		log.info("Adding musician {) to band  with ID= {}", musiciansData, bandId);
 
-
-	@GetMapping("/musicians")
-	public List<MusiciansData> retrieveAllMusicians() {
-		log.info("Retrieveing all bands");
-		return recordLabelService.retrieveAllMusicians();
-
+		return recordLabelService.saveMusician(bandId, musiciansData);
 	}
 
 	@GetMapping("/musicians/{musicianId}")
@@ -114,14 +103,14 @@ public class RecordLabelController {
 //
 
 	/* Focuses on the album table. */
-	
+
 	@PostMapping("/albums")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public AlbumsData insertAlbums(@RequestBody AlbumsData albumsData) {
 		log.info("Creating Album  {}", albumsData);
 		return recordLabelService.saveAlbums(albumsData);
 	}
-	
+
 	@GetMapping("/albums")
 	public List<AlbumsData> retrieveAllAlbums() {
 		log.info("Retrieveing all albums");
@@ -142,12 +131,12 @@ public class RecordLabelController {
 	}
 
 	/* Focuses on the songs table. */
-	
-	@PostMapping("/band/{bandId}/songs/")
+
+	@PostMapping("/band/{bandId}/songs")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public SongsData insertSongs(@RequestBody SongsData songsData) {
-		log.info("Creating Song with ID= {}", songsData);
-		return recordLabelService.saveSong(songsData);
+	public SongsData insertSongs(@PathVariable Long bandId, @RequestBody SongsData songsData) {
+		log.info("Creating Song with {}", songsData);
+		return recordLabelService.saveSong(bandId, songsData);
 	}
 
 	@GetMapping("/songs")
@@ -163,9 +152,22 @@ public class RecordLabelController {
 	}
 
 	@PutMapping("/band/{bandId}/songs/{songId}")
-	public SongsData updateSongs(@PathVariable Long songId, @RequestBody SongsData songsData) {
+	public SongsData updateSongs(@PathVariable Long bandId, @PathVariable Long songId,
+			@RequestBody SongsData songsData) {
 		songsData.setSongId(songId);
 		log.info("Updating Song  with ID={}", songsData);
-		return recordLabelService.saveSong(songsData);
+		return recordLabelService.saveSong(bandId, songsData);
+	}
+
+	
+	
+
+	@PostMapping("songs/{songId}/albums/{albumId}")
+	public Map<String, String> addSongToAlbum(@PathVariable Long songId, @PathVariable Long albumId) {
+		log.info("Adding song with ID= {} to album with ID= {}", songId, albumId);
+
+		recordLabelService.addSongToAlbum(songId, albumId);
+
+		return Map.of("message", "Song with ID= " + songId + " to album with ID= " + albumId + ".");
 	}
 }
