@@ -269,7 +269,7 @@ public class RecordLabelService {
 		song.setSongTitle(songsData.getSongTitle());
 	}
 
-	public void addSongToAlbum(Long songId, Long albumId) {
+	public void addSongToAlbum(Long albumId, Long songId) {
 		Songs song = findSongById(songId);
 		Albums album = findAlbumById(albumId);
 		song.getAlbums().add(album);

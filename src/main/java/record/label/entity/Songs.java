@@ -40,8 +40,8 @@ public class Songs {
 	@ManyToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	//@formatter:off
 	@JoinTable(name = "album_songs",
-	joinColumns = @JoinColumn(name = "album_id"),
-	inverseJoinColumns = @JoinColumn(name = "song_id"))
+	joinColumns = @JoinColumn(name = "song_id"),
+	inverseJoinColumns = @JoinColumn(name = "album_id"))
 //@formatter:on
 	private Set<Albums> albums = new HashSet<>();
 	

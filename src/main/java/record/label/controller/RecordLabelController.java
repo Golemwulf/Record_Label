@@ -159,11 +159,11 @@ public class RecordLabelController {
 		return recordLabelService.saveSong(bandId, songsData);
 	}
 
-	@PostMapping("songs/{songId}/albums/{albumId}")
-	public Map<String, String> addSongToAlbum(@PathVariable Long songId, @PathVariable Long albumId) {
+	@PostMapping("/albums/{albumId}/songs/{songId}")
+	public Map<String, String> addSongToAlbum( @PathVariable Long albumId, @PathVariable Long songId) {
 		log.info("Adding song with ID= {} to album with ID= {}", songId, albumId);
 
-		recordLabelService.addSongToAlbum(songId, albumId);
+		recordLabelService.addSongToAlbum(albumId, songId);
 
 		return Map.of("message", "Song with ID= " + songId + " to album with ID= " + albumId + ".");
 	}
