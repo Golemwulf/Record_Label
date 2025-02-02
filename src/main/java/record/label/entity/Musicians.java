@@ -25,7 +25,7 @@ public class Musicians {
 	private String instrument;
 	
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "band_id")
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude

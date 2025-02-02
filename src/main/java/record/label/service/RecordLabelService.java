@@ -184,7 +184,6 @@ public class RecordLabelService {
 		for (Albums album : albums) {
 			AlbumsData ad = new AlbumsData(album);
 
-			ad.getSongs().clear();
 
 			result.add(ad);
 		}

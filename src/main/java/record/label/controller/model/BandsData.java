@@ -67,7 +67,7 @@ public class BandsData {
 		private String firstName;
 		private String lastName;
 		private String instrument;
-		private BandsData bands;
+		
 
 		public MusiciansData(Musicians musician) {
 			this.musicianId = musician.getMusicianId();
@@ -96,7 +96,7 @@ public class BandsData {
 		private Long albumId;
 		private String albumTitle;
 		private String yearReleased;
-		private Set<SongsData> songs = new HashSet<>();
+		
 
 		public AlbumsData(Albums album) {
 			this.albumId = album.getAlbumId();

@@ -3,7 +3,6 @@ package record.label.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,13 +26,13 @@ public class Bands {
 	private String homeTown;
 	private String yearsActive;
 	
-	@OneToMany(mappedBy = "band", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "band", cascade = CascadeType.ALL, orphanRemoval = true)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	private Set<Musicians> musicians = new HashSet<>();
 	
 
-	@OneToMany(mappedBy = "bands", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "bands", cascade = CascadeType.ALL, orphanRemoval = true)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	private Set<Songs> songs = new HashSet<>();
