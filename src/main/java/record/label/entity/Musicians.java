@@ -23,7 +23,7 @@ public class Musicians {
 	private String lastName;
 	private String instrument;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "band_id")
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
