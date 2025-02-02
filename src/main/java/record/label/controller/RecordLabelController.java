@@ -159,9 +159,6 @@ public class RecordLabelController {
 		return recordLabelService.saveSong(bandId, songsData);
 	}
 
-	
-	
-
 	@PostMapping("songs/{songId}/albums/{albumId}")
 	public Map<String, String> addSongToAlbum(@PathVariable Long songId, @PathVariable Long albumId) {
 		log.info("Adding song with ID= {} to album with ID= {}", songId, albumId);

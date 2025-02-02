@@ -184,7 +184,6 @@ public class RecordLabelService {
 		for (Albums album : albums) {
 			AlbumsData ad = new AlbumsData(album);
 
-
 			result.add(ad);
 		}
 
@@ -270,13 +269,12 @@ public class RecordLabelService {
 		song.setSongTitle(songsData.getSongTitle());
 	}
 
-
 	public void addSongToAlbum(Long songId, Long albumId) {
 		Songs song = findSongById(songId);
 		Albums album = findAlbumById(albumId);
 		song.getAlbums().add(album);
 		album.getSongs().add(song);
-		songsDao.save(song);
+		albumsDao.save(album);
 
 	}
 

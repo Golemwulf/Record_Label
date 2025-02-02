@@ -40,6 +40,7 @@ public class BandsData {
 		for (Songs song : band.getSongs()) {
 			this.songs.add(new SongsData(song));
 		}
+
 	}
 
 	public Bands toBands() {
@@ -56,6 +57,7 @@ public class BandsData {
 		for (SongsData songData : songs) {
 			band.getSongs().add(songData.toSongs());
 		}
+
 		return band;
 	}
 
@@ -67,7 +69,6 @@ public class BandsData {
 		private String firstName;
 		private String lastName;
 		private String instrument;
-		
 
 		public MusiciansData(Musicians musician) {
 			this.musicianId = musician.getMusicianId();
@@ -96,7 +97,6 @@ public class BandsData {
 		private Long albumId;
 		private String albumTitle;
 		private String yearReleased;
-		
 
 		public AlbumsData(Albums album) {
 			this.albumId = album.getAlbumId();

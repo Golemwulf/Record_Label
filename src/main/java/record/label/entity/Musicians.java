@@ -1,6 +1,5 @@
 package record.label.entity;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +18,11 @@ public class Musicians {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long musicianId;
-	
+
 	private String firstName;
 	private String lastName;
 	private String instrument;
-	
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "band_id")
 	@EqualsAndHashCode.Exclude

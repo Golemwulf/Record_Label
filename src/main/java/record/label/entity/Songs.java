@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
@@ -35,7 +36,13 @@ public class Songs {
 	
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "songs", cascade = CascadeType.PERSIST)
+	
+	@ManyToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	//@formatter:off
+	@JoinTable(name = "album_songs",
+	joinColumns = @JoinColumn(name = "album_id"),
+	inverseJoinColumns = @JoinColumn(name = "song_id"))
+//@formatter:on
 	private Set<Albums> albums = new HashSet<>();
 	
 }
