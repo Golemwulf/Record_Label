@@ -1,3 +1,4 @@
+
 package record.label.entity;
 
 import java.util.HashSet;

@@ -18,7 +18,7 @@ import lombok.ToString;
 public class Bands {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long bandId;
 	
 	private String bandName;
