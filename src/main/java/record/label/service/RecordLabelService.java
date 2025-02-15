@@ -36,6 +36,7 @@ public class RecordLabelService {
 
 	/* bands Table */
 
+	
 	@Transactional(readOnly = false)
 	public BandsData saveBands(BandsData bandData) {
 		Long bandId = bandData.getBandId();
@@ -45,7 +46,8 @@ public class RecordLabelService {
 		return new BandsData(bandDao.save(band));
 
 	}
-
+	
+	
 	private Bands findOrCreateBands(Long bandId) {
 		if (Objects.isNull(bandId)) {
 			return new Bands();
